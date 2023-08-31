@@ -1,14 +1,14 @@
 /**
  * Developed by Anthony Cox in 2023
  */
-import configureCommonJestSettings from "../../../src/config/config-common";
+import configureCommonJestSettings from '../../../src/config/config-common';
+import jestUnitTestConfig from '../../jest-config/unit.config';
 
 describe('Common Jest Configuration', () => {
-  const expectedCssMockFileLocation = '<rootDir>/tests/jest-config/mocks/cssMock.js';
-  const expectedDefaultRootDirectoryLocation = '../../';
-  const expectedImageMockFileLocation = '<rootDir>/tests/jest-config/mocks/imageMock.js';
-  const expectedTestEnvironmentOptionsURL = 'http://localhost/';
-
+  /* Test data */
+  const moduleNameMapperCssMock = '\\.(css|less)$';
+  const moduleNameMapperImageMock = '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$';
+  
   describe('configureCommonJestSettings() method behaviour - Default root directory', () => {
     let jestConfig;
 
@@ -17,17 +17,17 @@ describe('Common Jest Configuration', () => {
     });
 
     it('verifies that the image mock file location property is set correctly', () => {
-      const fileLocation = jestConfig.moduleNameMapper['\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$'];
-      expect(fileLocation).toBe(expectedImageMockFileLocation);
+      const fileLocation = jestConfig.moduleNameMapper[`${moduleNameMapperImageMock}`];
+      expect(fileLocation).toBe(jestUnitTestConfig.moduleNameMapper[`${moduleNameMapperImageMock}`]);
     });
 
     it('verifies that the css mock file location property is set correctly', () => {
-      const fileLocation = jestConfig.moduleNameMapper['\\.(css|less)$'];
-      expect(fileLocation).toBe(expectedCssMockFileLocation);
+      const fileLocation = jestConfig.moduleNameMapper[`${moduleNameMapperCssMock}`];
+      expect(fileLocation).toBe(jestUnitTestConfig.moduleNameMapper[`${moduleNameMapperCssMock}`]);
     });
 
     it('verifies that the root directory location property is set correctly', () => {
-      expect(jestConfig.rootDir).toBe(expectedDefaultRootDirectoryLocation);
+      expect(jestConfig.rootDir).toBe(jestUnitTestConfig.rootDir);
     });
 
     it('verifies that the list of setup files after environment property is defined', () => {
@@ -43,7 +43,7 @@ describe('Common Jest Configuration', () => {
     });
 
     it('verifies that the URL is set to the test environment options property', () => {
-      expect(jestConfig.testEnvironmentOptions.url).toBe(expectedTestEnvironmentOptionsURL);
+      expect(jestConfig.testEnvironmentOptions.url).toBe(jestUnitTestConfig.testEnvironmentOptions.url);
     });
 
     it('verifies that the verbose property is set correctly', () => {
