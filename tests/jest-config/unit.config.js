@@ -8,6 +8,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules',
+    '<rootDir>/src/index.js',
     '<rootDir>/tests/jest-config',
     '<rootDir>/tests/unit/coverage',
   ],
