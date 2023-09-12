@@ -5,12 +5,15 @@ const lcov2badge = require('lcov2badge');
 import fs from 'fs';
 import testTypes from './coverage-data';
 
+/**
+ * Coverage badge generation module
+ */
 export default class CoverageBadge {
   /**
    * Generates the coverage badge
    * @param {{ badgeOutputPath: string, koThreshold: number, lcovInfoPath: string, subject: string, testType: string, warnThreshold: number }} testData 
    */
-  static generate(testData) {
+  static generate(testData = {}) {
     /* Determine the current test type being processed */
     const testType = testData.testType || testTypes.unit;
     
