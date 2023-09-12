@@ -4,12 +4,12 @@
 import configureCommonJestSettings from '../../../src/config/config-common';
 import jestUnitTestConfig from '../../jest-config/unit.config';
 
-describe('Common Jest Configuration', () => {
+describe('Common jest configuration', () => {
   /* Test data */
   const moduleNameMapperCssMock = '\\.(css|less)$';
   const moduleNameMapperImageMock = '\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$';
   
-  describe('configureCommonJestSettings() method behaviour - Default root directory', () => {
+  describe('configureCommonJestSettings() functionality - Default root directory', () => {
     let jestConfig;
 
     beforeAll(() => {
@@ -51,7 +51,7 @@ describe('Common Jest Configuration', () => {
     });
   });
 
-  describe('configureCommonJestSettings() method behaviour - Custom root directory', () => {
+  describe('configureCommonJestSettings() functionality - Custom root directory', () => {
     let jestConfig;
     const testRootDirectory = '/my-project-root-directory';
 
