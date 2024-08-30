@@ -1,0 +1,42 @@
+{
+  "name": "ajc-testing-code",
+  "version": "1.0.0",
+  "description": "A JavaScript testing module for ReactJs projects. Supports code-oriented unit, snapshots, accessibility and integration testing.",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajc24/ajc-testing-code.git"
+  },
+  "author": "Anthony Cox",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ajc24/ajc-testing-code/issues"
+  },
+  "homepage": "https://github.com/ajc24/ajc-testing-code#readme",
+  "scripts": {
+    "build": "babel src --out-dir build",
+    "test": "npm run test-unit-coverage",
+    "test-unit": "jest --config=./tests/jest-config/unit.config.js",
+    "test-unit-coverage": "npm run test-unit -- --collectCoverage"
+  },
+  "dependencies": {
+    "@testing-library/react": "^16.0.1",
+    "axe-core": "^4.10.0",
+    "jest": "^29.7.0",
+    "jsdom": "^25.0.0",
+    "jsdom-global": "^3.0.2",
+    "react-test-renderer": "^18.3.1"
+  },
+  "devDependencies": {
+    "ajc-babel": "git://github.com/ajc24/ajc-babel",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "peerDependencies": {
+    "react": ">= 18.3.x",
+    "react-dom": ">= 18.3.x"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  }
+}
