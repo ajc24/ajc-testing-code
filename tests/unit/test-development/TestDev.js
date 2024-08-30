@@ -34,6 +34,22 @@ describe('Test Development Helper Class', () => {
     });
   });
 
+  describe('getAxeTestTimeout() method behaviour', () => {
+    let timeout;
+
+    beforeAll(() => {
+      timeout = TestDev.getAxeTestTimeout();
+    });
+
+    it('verifies that the timeout value is that of a number', () => {
+      expect(typeof timeout).toBe('number');
+    });
+
+    it('verifies that the timeout value is a positive number', () => {
+      expect(timeout).toBeGreaterThan(0);
+    });
+  });
+
   describe('getComponentInHTMLTemplate() method behaviour - Default document title, no pre-existing title element', () => {
     let domHtml;
 
@@ -73,6 +89,182 @@ describe('Test Development Helper Class', () => {
 
     it('verifies that the html document has been generated correctly', () => {
       expect(domHtml).toBe(expectedCustomHtmlTemplate);
+    });
+  });
+
+  describe('runAxeCore() method behaviour - Passing component using div role main, no level one heading included, full HTML template', () => {
+    let divRoot;
+    let results;
+    const testTimeout = TestDev.getAxeTestTimeout();
+
+    /* Create the passing component required for the test */
+    const PassingComponentUsingDivRoleMain = () => {
+      return (
+        <div role="main">
+          <p>Hello World</p>
+        </div>
+      );
+    };
+
+    beforeAll(async () => {
+      /* Create a root div element for the components to be injected to */
+      divRoot = document.createElement('div');
+      divRoot.setAttribute('id', 'root');
+
+      /* Mount the component and perform accessibility testing on that component */
+      const { unmount } = render(<PassingComponentUsingDivRoleMain />, {
+        container: document.body.appendChild(divRoot),
+      });
+      const componentHtml = TestDev.getComponentInHTMLTemplate('Passing Component');
+      results = await TestDev.runAxeCore(componentHtml, 'Mock Level One Heading');
+      unmount();
+    }, testTimeout);
+
+    afterAll(() => {
+      /* Clean up the root div element when each test finished */
+      const rootDiv = document.querySelector('div[id="root"]');
+      if (rootDiv !== null) {
+        rootDiv.parentNode.removeChild(rootDiv);
+      }
+    });
+
+    it('verifies that the component passes the accessibility test', () => {
+      expect(results).toBeTruthy();
+    });
+  });
+
+  describe('runAxeCore() method behaviour - Passing component using main, includes level one heading, not using a HTML template', () => {
+    let divRoot;
+    let results;
+    const testTimeout = TestDev.getAxeTestTimeout();
+
+    /* Create the passing component required for the test */
+    const PassingComponentUsingMain = () => {
+      return (
+        <main>
+          <h1>Mock Level One Heading</h1>
+          <p>Hello World</p>
+        </main>
+      );
+    };
+
+    beforeAll(async () => {
+      /* Create a root div element for the components to be injected to */
+      divRoot = document.createElement('div');
+      divRoot.setAttribute('id', 'root');
+
+      /* Mount the component and perform accessibility testing on that component */
+      const { unmount } = render(<PassingComponentUsingMain />, {
+        container: document.body.appendChild(divRoot),
+      });
+      const componentHtml = TestDev.getComponentInHTMLTemplate('Passing Component');
+      results = await TestDev.runAxeCore(componentHtml);
+      unmount();
+    }, testTimeout);
+
+    afterAll(() => {
+      /* Clean up the root div element when each test finished */
+      const rootDiv = document.querySelector('div[id="root"]');
+      if (rootDiv !== null) {
+        rootDiv.parentNode.removeChild(rootDiv);
+      }
+    });
+
+    it('verifies that the component passes the accessibility test', () => {
+      expect(results).toBeTruthy();
+    });
+  });
+
+  describe('runAxeCore() method behaviour - Failing component not using main, no level one heading included, full HTML template', () => {
+    let consoleErrorSpy;
+    let divRoot;
+    let results;
+    const testTimeout = TestDev.getAxeTestTimeout();
+
+    /* Create the failing component required for the test */
+    const FailingComponentNotUsingMain = () => {
+      return (
+        <div>
+          <p>Hello World</p>
+        </div>
+      );
+    };
+
+    beforeAll(async () => {
+      consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementation(() => {});
+
+      /* Create a root div element for the components to be injected to */
+      divRoot = document.createElement('div');
+      divRoot.setAttribute('id', 'root');
+
+      /* Mount the component and perform accessibility testing on that component */
+      const { unmount } = render(<FailingComponentNotUsingMain />, {
+        container: document.body.appendChild(divRoot),
+      });
+      const componentHtml = TestDev.getComponentInHTMLTemplate('Failimg Component');
+      results = await TestDev.runAxeCore(componentHtml, 'Mock Level One Heading');
+      unmount();
+    }, testTimeout);
+
+    afterAll(() => {
+      consoleErrorSpy.mockRestore();
+
+      /* Clean up the root div element when each test finished */
+      const rootDiv = document.querySelector('div[id="root"]');
+      if (rootDiv !== null) {
+        rootDiv.parentNode.removeChild(rootDiv);
+      }
+    });
+
+    it('verifies that the component fails the accessibility test', () => {
+      expect(results).toBeFalsy();
+    });
+  });
+
+  describe('runAxeCore() method behaviour - Failing component using main, no level one heading included, not using a HTML template', () => {
+    let consoleErrorSpy;
+    let divRoot;
+    let results;
+    const testTimeout = TestDev.getAxeTestTimeout();
+
+    /* Create the failing component required for the test */
+    const FailingComponentUsingDivRoleMain = () => {
+      return (
+        <div role="main">
+          <label htmlFor="firstname">First name:</label>
+          <input type="text" name="lastname" id="lastname" />
+        </div>
+      );
+    };
+
+    beforeAll(async () => {
+      consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementation(() => {});
+
+      /* Create a root div element for the components to be injected to */
+      divRoot = document.createElement('div');
+      divRoot.setAttribute('id', 'root');
+
+      /* Mount the component and perform accessibility testing on that component */1
+      const { unmount } = render(<FailingComponentUsingDivRoleMain />, {
+        container: document.body.appendChild(divRoot),
+      });
+      const componentHtml = TestDev.getComponentInHTMLTemplate('Failing Component');
+      results = await TestDev.runAxeCore(componentHtml, 'Mock Level One Heading');
+      unmount();
+    }, testTimeout);
+
+    afterAll(() => {
+      consoleErrorSpy.mockRestore();
+
+      /* Clean up the root div element when each test finished */
+      const rootDiv = document.querySelector('div[id="root"]');
+      if (rootDiv !== null) {
+        rootDiv.parentNode.removeChild(rootDiv);
+      }
+    });
+
+    it('verifies that the component fails the accessibility test', () => {
+      expect(results).toBeFalsy();
     });
   });
 });
