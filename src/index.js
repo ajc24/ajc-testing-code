@@ -7,8 +7,11 @@ import {
   configureUnitTests,
 } from './config/config';
 
+import TestDev from './test-development/TestDev';
+
 export {
   configureAccessibilityTests,
   configureSnapshotTests,
   configureUnitTests,
+  TestDev,
 };
