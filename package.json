@@ -24,8 +24,7 @@
     "axe-core": "^4.10.0",
     "jest": "^29.7.0",
     "jsdom": "^25.0.0",
-    "jsdom-global": "^3.0.2",
-    "react-test-renderer": "^18.3.1"
+    "jsdom-global": "^3.0.2"
   },
   "devDependencies": {
     "ajc-babel": "git://github.com/ajc24/ajc-babel",
