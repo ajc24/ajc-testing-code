@@ -1,7 +1,7 @@
 /**
  * Developed by Anthony Cox in 2024
  */
-import { render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import axe from 'axe-core';
 
 /**
@@ -18,6 +18,7 @@ export default class TestDev {
     const { container, unmount } = render(ReactComponent);
     const htmlSnapshot = container.innerHTML;
     unmount();
+    cleanup();
     return htmlSnapshot;
   }
 
