@@ -71,6 +71,7 @@ var TestDev = exports["default"] = /*#__PURE__*/function () {
         unmount = _render.unmount;
       var htmlSnapshot = container.innerHTML;
       unmount();
+      (0, _react.cleanup)();
       return htmlSnapshot;
     }
 
