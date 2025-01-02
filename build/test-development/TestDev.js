@@ -19,6 +19,8 @@ require("core-js/modules/es.object.set-prototype-of.js");
 require("core-js/modules/es.object.to-string.js");
 require("core-js/modules/es.promise.js");
 require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/esnext.iterator.constructor.js");
+require("core-js/modules/esnext.iterator.for-each.js");
 require("core-js/modules/web.dom-collections.for-each.js");
 require("core-js/modules/web.dom-collections.iterator.js");
 Object.defineProperty(exports, "__esModule", {
@@ -35,6 +37,7 @@ require("core-js/modules/es.array.index-of.js");
 require("core-js/modules/es.array.map.js");
 require("core-js/modules/es.date.to-primitive.js");
 require("core-js/modules/es.number.constructor.js");
+require("core-js/modules/esnext.iterator.map.js");
 var _react = require("@testing-library/react");
 var _axeCore = _interopRequireDefault(require("axe-core"));
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { "default": e }; }
