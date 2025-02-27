@@ -79,6 +79,36 @@ var TestDev = exports["default"] = /*#__PURE__*/function () {
     }
 
     /**
+     * Generates a HTML snapshot as a string for the specified React component.
+     * Handles all timer mocks for any / all setTimeout() functionality used by the component.
+     * @param {React.Component} ReactComponent 
+     * @returns {string}
+     */
+  }, {
+    key: "createSnapshot_UseFakeTimers",
+    value: function createSnapshot_UseFakeTimers(ReactComponent) {
+      /* Enable fake timers to allow the setTimeout() functionality to be fired correctly */
+      jest.useFakeTimers();
+
+      /* Render the component */
+      var _render2 = (0, _react.render)(ReactComponent),
+        container = _render2.container,
+        unmount = _render2.unmount;
+      (0, _react.act)(function () {
+        /* Execute all of the timers */
+        jest.runAllTimers();
+      });
+      /* Restore real timers now that all timers used by the component have been executed */
+      jest.useRealTimers();
+
+      /* Create the snapshot */
+      var htmlSnapshot = container.innerHTML;
+      unmount();
+      (0, _react.cleanup)();
+      return htmlSnapshot;
+    }
+
+    /**
      * Returns the maximum timeout in milliseconds for accessibility test suites
      * @returns {number}
      */
@@ -114,6 +144,30 @@ var TestDev = exports["default"] = /*#__PURE__*/function () {
         _titleElement.textContent = htmlTitle;
       }
       return document.getElementsByTagName('html')[0].outerHTML;
+    }
+
+    /**
+     * Renders a React component in the DOM. Handles all timer mocks for any / all
+     * setTimeout() functionality used by the component.
+     * @param {React.Component} ReactComponent 
+     * @returns {function}
+     */
+  }, {
+    key: "render_UseFakeTimers",
+    value: function render_UseFakeTimers(ReactComponent) {
+      /* Enable fake timers to allow the setTimeout() functionality to be fired correctly */
+      jest.useFakeTimers();
+
+      /* Render the component */
+      var _render3 = (0, _react.render)(ReactComponent),
+        unmount = _render3.unmount;
+      (0, _react.act)(function () {
+        /* Execute all of the timers */
+        jest.runAllTimers();
+      });
+      /* Restore real timers now that all timers used by the component have been executed */
+      jest.useRealTimers();
+      return unmount;
     }
 
     /**
