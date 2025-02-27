@@ -2,7 +2,7 @@
  * Developed by Anthony Cox in 2024
  */
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { TestDev } from '../../../src';
 
 describe('Test Development Helper Class', () => {
@@ -17,6 +17,34 @@ describe('Test Development Helper Class', () => {
   };
   /* Set the data to be returned by the snapshot test */
   const simpleComponentAsAHTMLString = '<div><p>Hello World</p></div>';
+
+  /* Create a more complex React component for use with the test */
+  class ComplexComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        updated: false,
+      };
+      this.setUpdated = this.setUpdated.bind(this);
+    }
+    componentDidMount() {
+      setTimeout(() => {
+        this.setUpdated(true);
+      }, 5000);
+    }
+    setUpdated(newUpdated) {
+      this.setState({ updated: newUpdated });
+    }
+    render() {
+      return (
+        <div data-updated={`${this.state.updated}`}>
+          <p>Hello World</p>
+        </div>
+      );
+    }
+  };
+  /* Set the data to be returned by the snapshot test */
+  const complexComponentAsAHTMLString = '<div data-updated="true"><p>Hello World</p></div>';
   
   describe('createSnapshot() method behaviour', () => {
     let htmlSnapshot;
@@ -31,6 +59,22 @@ describe('Test Development Helper Class', () => {
 
     it('verifies that the string value generated from the React component matches the expected string value', () => {
       expect(htmlSnapshot).toStrictEqual(simpleComponentAsAHTMLString);
+    });
+  });
+
+  describe('createSnapshot_UseFakeTimers() method behaviour', () => {
+    let htmlSnapshot;
+
+    beforeAll(() => {
+      htmlSnapshot = TestDev.createSnapshot_UseFakeTimers(<ComplexComponent />);
+    });
+
+    it('verifies that a string value is generated from the React component as expected', () => {
+      expect(typeof htmlSnapshot).toBe('string');
+    });
+
+    it('verifies that the string value generated from the React component matches the expected string value', () => {
+      expect(htmlSnapshot).toStrictEqual(complexComponentAsAHTMLString);
     });
   });
 
@@ -89,6 +133,43 @@ describe('Test Development Helper Class', () => {
 
     it('verifies that the html document has been generated correctly', () => {
       expect(domHtml).toBe(expectedCustomHtmlTemplate);
+    });
+  });
+
+  describe('render_UseFakeTimers() method behaviour', () => {
+    const testData = [];
+    let unmount;
+
+    beforeAll(() => {
+      unmount = TestDev.render_UseFakeTimers(<ComplexComponent />);
+
+      /* Verifies that the updated version of the component (after all timers are run) is rendered correctly */
+      testData.push(document.querySelector('div[data-updated="true"]'));
+
+      /* Verifies that the unmount functionality is generated correctly */
+      testData.push(typeof unmount);
+
+      /* Execute the unmount functionality */
+      unmount();
+
+      /* Verifies that the component is no longer rendered after invoking the unmount() functionality */
+      testData.push(document.querySelector('div[data-updated="true"]'));
+    });
+
+    afterAll(() => {
+      document.body.innerHTML = '';
+    });
+
+    it('verifies that the updated version of the component (after all timers are run) is rendered correctly', () => {
+      expect(testData[0]).not.toBeNull();
+    });
+
+    it('verifies that the unmount functionality is generated correctly', () => {
+      expect(testData[1]).toBe('function');
+    });
+
+    it('verifies that the component is no longer rendered after invoking the unmount() functionality', () => {
+      expect(testData[2]).toBeNull();
     });
   });
 
