@@ -1,7 +1,7 @@
 /**
  * Developed by Anthony Cox in 2024
  */
-import { cleanup, render } from '@testing-library/react';
+import { act, cleanup, render } from '@testing-library/react';
 import axe from 'axe-core';
 
 /**
@@ -16,6 +16,33 @@ export default class TestDev {
    */
   static createSnapshot(ReactComponent) {
     const { container, unmount } = render(ReactComponent);
+    const htmlSnapshot = container.innerHTML;
+    unmount();
+    cleanup();
+    return htmlSnapshot;
+  }
+
+  /**
+   * Generates a HTML snapshot as a string for the specified React component.
+   * Handles all timer mocks for any / all setTimeout() functionality used by the component.
+   * @param {React.Component} ReactComponent 
+   * @returns {string}
+   */
+  static createSnapshot_UseFakeTimers(ReactComponent) {
+    /* Enable fake timers to allow the setTimeout() functionality to be fired correctly */
+    jest.useFakeTimers();
+
+    /* Render the component */
+    const { container, unmount } = render(ReactComponent);
+
+    act(() => {
+      /* Execute all of the timers */
+      jest.runAllTimers();
+    });
+    /* Restore real timers now that all timers used by the component have been executed */
+    jest.useRealTimers();
+
+    /* Create the snapshot */
     const htmlSnapshot = container.innerHTML;
     unmount();
     cleanup();
@@ -53,6 +80,29 @@ export default class TestDev {
       titleElement.textContent = htmlTitle;
     }
     return document.getElementsByTagName('html')[0].outerHTML;
+  }
+
+  /**
+   * Renders a React component in the DOM. Handles all timer mocks for any / all
+   * setTimeout() functionality used by the component.
+   * @param {React.Component} ReactComponent 
+   * @returns {function}
+   */
+  static render_UseFakeTimers(ReactComponent) {
+    /* Enable fake timers to allow the setTimeout() functionality to be fired correctly */
+    jest.useFakeTimers();
+
+    /* Render the component */
+    const { unmount } = render(ReactComponent);
+
+    act(() => {
+      /* Execute all of the timers */
+      jest.runAllTimers();
+    });
+    /* Restore real timers now that all timers used by the component have been executed */
+    jest.useRealTimers();
+
+    return unmount;
   }
 
   /**
