@@ -1,8 +1,6 @@
 "use strict";
 
-require("core-js/modules/es.symbol.async-iterator.js");
 require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.symbol.to-string-tag.js");
 require("core-js/modules/es.array.for-each.js");
 require("core-js/modules/es.array.iterator.js");
 require("core-js/modules/es.array.push.js");
@@ -10,8 +8,6 @@ require("core-js/modules/es.array.reverse.js");
 require("core-js/modules/es.array.slice.js");
 require("core-js/modules/es.function.name.js");
 require("core-js/modules/es.iterator.for-each.js");
-require("core-js/modules/es.json.to-string-tag.js");
-require("core-js/modules/es.math.to-string-tag.js");
 require("core-js/modules/es.object.create.js");
 require("core-js/modules/es.object.define-property.js");
 require("core-js/modules/es.object.get-prototype-of.js");
